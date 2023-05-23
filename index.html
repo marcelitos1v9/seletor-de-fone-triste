@@ -5,7 +5,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center">Bad UI Battle</h1>
+        <h1 class="text-center">Marcelitos selector fone</h1>
         <form class="bg-light rounded p-4 mt-4">
             <h3 class="mb-3">Seletor de Telefone Ruim</h3>
             <div class="mb-3">Telefone: <span id="phoneDisplay">(30) 3396-69214</span></div>
@@ -19,7 +19,7 @@
             <input id="submit" type="submit" value="Enviar" class="btn btn-primary">
         </form>
         <footer class="fixed-bottom bg-light text-center p-3 mt-5">
-            &copy; 2023 Bad UI Battle
+            &copy; 2023 Marcelitos selector fone
         </footer>
     </div>
 
@@ -32,6 +32,7 @@
         var speed = 0;
         var friction = 0.99;
         var value = Number(slider.value);
+        var advancedMode = false;
 
         function PhoneNumberToDisplay(value) {
             var display = "(" + value.toString().substr(0, 2) + ") " + value.toString().substr(2, 4) + "-" + value.toString().substr(6, 5);
@@ -55,7 +56,19 @@
             phoneDisplay.innerHTML = PhoneNumberToDisplay(value);
         }
 
-        setInterval(UpdatePhone, 10);
+        function MovePhone() {
+            if (!advancedMode) {
+                speed = 0;
+                UpdatePhone();
+            } else {
+                angle = Number(angleSlider.value);
+                slider.style.transform = "rotate(" + angle + "deg)";
+                angleSlider.value = angle; // Atualiza a posição do controle deslizante de ângulo
+                UpdatePhone(); // Atualiza o número de telefone com base no ângulo e no balanço do slider
+            }
+        }
+
+        setInterval(MovePhone, 10);
 
         advancedModeCheckbox.addEventListener("change", function () {
             if (this.checked) {
@@ -69,21 +82,12 @@
                 angleSlider.value = 0;
                 slider.style.transform = "rotate(0deg)";
             }
+            advancedMode = this.checked;
         });
 
         slider.oninput = function () {
             speed = 0;
         };
-
-        angleSlider.oninput = function () {
-            angle = Number(angleSlider.value);
-            slider.style.transform = "rotate(" + angle + "deg)";
-        };
-
-        var advancedMode = false;
-        advancedModeCheckbox.addEventListener("change", function () {
-            advancedMode = advancedModeCheckbox.checked;
-        });
 
         document.getElementById("submit").addEventListener("click", function (event) {
             if (confirm("Este é o seu número de telefone?\n" + PhoneNumberToDisplay(value))) {
